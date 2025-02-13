@@ -1,0 +1,21 @@
+html, body {
+    margin: 0;
+    background: #6dbd48;
+    color: white;
+}
+
+section {
+    padding-top: 100px;
+}
+
+.black-jack-card {
+    position: relative;
+    width: 150px;
+    left: 100px;
+    margin-left: -75px;
+}
+
+.div-player-cards {
+    height: 240px;
+}
+
