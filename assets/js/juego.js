@@ -85,7 +85,6 @@
         for(let i = 0; i <= playersNumber; i++) {
             playersScore[i] = 0; 
         }
-
     }
     
     // Crea el arreglo de cartas y lo organiza de forma aleatoria (Crea la baraja)
@@ -146,6 +145,7 @@
         return false;
     } 
 
+    // Valida si hay más jugadores esperando turno o dispara el computador
     const validateNextPlayer = () => {
         turn += 1;
 
@@ -181,6 +181,8 @@
     });
     
     newGameButton.addEventListener('click', () => {
+        // playersScore = [18,17,19,25, 20];
+        // validateWinner();
         initilizeGame();
     });
     
@@ -216,17 +218,16 @@
     
         setTimeout(() => {
             alertWinner(false);
-        }, 100); 
-    
+        }, 100);     
     }
 
+    // Valida si el jugador ha superado el número 21
     const validatePlayersScore = () => {
         let isAnyScore21 = playersScore.includes(21);
         if (isAnyScore21) return false;
 
         let onlyPreviousScores = [...playersScore];
         onlyPreviousScores.pop();
-        
 
         let losers = 0;
         for(let playerScore of onlyPreviousScores) {
@@ -250,32 +251,51 @@
             return;
         }
 
-        validateTie();
+        let isATie = validateTie();
 
-        // if (isATie) {
-        //     alert('empate');
-        //     return;
-        // }
-
-        
+        if(isATie) {
+            alert('Empate');
+        } else {
+            let indexWinner = validateWinner();
+            alert('El ganador de esta partida es el jugador ' + indexWinner);
+        }        
     }
 
+    // Valida si hay empates entre los puntajes de los jugadores  
     const validateTie = () => {
-        let copyPlayersScore = [...playersScore];
-
         if(playersScore.includes(21)) {
+            let copyPlayersScore = [...playersScore];
             let winner1 = playersScore.indexOf(21);
             copyPlayersScore.splice(winner1, 1);
             if(copyPlayersScore.includes(21)) {
-                alert('empate')
-            } else if (winner1 === playersScore.length - 1) {
-                alert('Gana el computador');
-            } else {
-                alert(`Gana el jugador ${winner1 + 1}`);
-            }   
-        } /* else if() { */
+                return true;
+            }
+        } else {
+            for(let i = 1; i < playersScore.length; i++) {
+                if (playersScore[0] === playersScore[i]) {
+                    return true;
+                }
+            }
+        }
+    }    
 
-        // }
+    // Valida el ganador en caso de no presentarse empates
+    const validateWinner = () => {
+
+        let greaterValue = 0;
+        let indexWinner;
+        playersScore.forEach((score, index) => {
+            if(score > 21) {
+                greaterValue = greaterValue;
+            } else {
+                if (score > greaterValue) {
+                    greaterValue = score;
+                    indexWinner = index;
+                }
+            }
+        });
+
+        return indexWinner + 1;
     }
 })();
 
